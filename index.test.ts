@@ -45,4 +45,6 @@ testOnCases("transform-content", transformContent, [
   ["У іх", "U jich"],
   ["цалкам іншы,", "całkam jinšy,"],
   ["вачох іхных", "vačoch jichnych"],
+  [" і іншае", " i jinšaje"],
+  [">Я 032, уцяміў", ">Ja 032, uciamiů"],
 ]);
