@@ -1,0 +1,12 @@
+{
+  "name": "be-latinizer",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "iconv-lite": "^0.6.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
