@@ -1,10 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import { transformContent } from "./transform-content";
 
-export const getLabel = (inputType: string) =>
+const getLabel = (inputType: string) =>
   `\x1b[35m%${inputType}\x1b[0;2m -> \x1b[0;1m%s`;
 
-export const testOnCases = <TInput, TOutput extends string>(
+const testOnCases = <TInput, TOutput extends string>(
   name: string,
   fn: (arg: TInput) => TOutput,
   cases: readonly (readonly [TInput, TOutput])[],
