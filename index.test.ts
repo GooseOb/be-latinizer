@@ -50,4 +50,5 @@ testOnCases("transform-content", transformContent, [
   ["КАІР", "KAJIR"],
   [". Імаверна", ". Imavierna"],
   ["Я Інфарматар", "Ja Jinfarmatar"],
+  ["<lia>а</lia>", "<lia>a</lia>"],
 ]);
