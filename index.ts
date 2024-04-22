@@ -26,7 +26,7 @@ const targetDir = "./output";
 
 const createDirIfNotExist = (dirPath: string) =>
   exists(dirPath).then((does) => {
-    if (does) return mkdir(dirPath, { recursive: true });
+    if (!does) return mkdir(dirPath, { recursive: true });
   });
 
 await createDirIfNotExist(targetDir);
