@@ -1,55 +1,43 @@
-import { readFile, writeFile, mkdir, exists, readdir, stat } from "fs/promises";
+import { exists, mkdir, readdir, stat } from "fs/promises";
 import * as path from "path";
 import { transformContent } from "./transform-content";
 import iconv from "iconv-lite";
 
-const readFilesRecursively = (
-  dir: string,
-  callback: (filePath: string) => void,
-) => {
-  readdir(dir).then((dirs) =>
-    Promise.all(
-      dirs.map(async (filePath) => {
-        filePath = path.resolve(dir, filePath);
-        if ((await stat(filePath)).isDirectory()) {
-          readFilesRecursively(filePath, callback);
-        } else {
-          callback(filePath);
-        }
-      }),
-    ),
-  );
+const getArg = (name: string, defaultValue: string) => {
+  const index = process.argv.indexOf(name) + 1;
+  return index ? process.argv[index] : defaultValue;
 };
 
-const sourceDir = "./input";
-const targetDir = "./output";
+const sourceDir = getArg("--inp", "./input");
+const targetDir = getArg("--out", "./output");
+const sourceEncoding = getArg("--inpenc", "win1251");
+const targetEncoding = getArg("--outenc", "win1250");
 
-const createDirIfNotExist = (dirPath: string) =>
-  exists(dirPath).then((does) => {
-    if (!does) return mkdir(dirPath, { recursive: true });
-  });
+if (!(await exists(sourceDir))) {
+  process.stderr.write(
+    `\x1b[31m[be-latinizer]\x1b[0m Source directory \x1b[33m${sourceDir}\x1b[0m does not exist\n`,
+  );
+  process.exit(1);
+}
 
-await createDirIfNotExist(targetDir);
+for (const relFilePath of await readdir(sourceDir, { recursive: true })) {
+  const sourcePath = path.join(sourceDir, relFilePath);
+  if ((await stat(sourcePath)).isDirectory()) {
+    await mkdir(path.join(targetDir, relFilePath), { recursive: true });
+    continue;
+  }
 
-readFilesRecursively(sourceDir, async (filePath) => {
   const data = iconv.decode(
-    (await readFile(filePath, "binary")) as unknown as Buffer,
-    "win1251",
+    Buffer.from(await Bun.file(sourcePath).arrayBuffer()),
+    sourceEncoding,
   );
 
-  const transformedContent = transformContent(data.toString());
+  const targetPath = path.join(targetDir, relFilePath);
 
-  const relativePath = path.relative(sourceDir, filePath);
-  const targetFilePath = path.join(targetDir, relativePath);
-
-  const targetDirPath = path.dirname(targetFilePath);
-
-  await createDirIfNotExist(targetDirPath);
-
-  await writeFile(
-    targetFilePath,
-    iconv.encode(transformedContent, "win1250"),
-    "utf8",
+  await Bun.write(
+    targetPath,
+    iconv.encode(transformContent(data.toString()), targetEncoding),
   );
-  process.stdout.write(`[done] ${targetFilePath}\n`);
-});
+
+  process.stdout.write(`[done] ${targetPath}\n`);
+}

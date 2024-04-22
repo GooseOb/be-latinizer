@@ -9,9 +9,22 @@ bun install
 To run:
 
 ```bash
-bun run index.ts
+bun run ./index.ts
+# or
+bun .
 ```
 
-Target files should be in `input/` directory.
+# Options
 
-Processed files will appear in `output/` directory.
+| name       | default value | description           |
+| ---------- | ------------- | --------------------- |
+| `--inp`    | ./input       | input directory       |
+| `--out`    | ./output      | output directory      |
+| `--inpenc` | win1251       | input files encoding  |
+| `--outenc` | win1250       | output files encoding |
+
+Example:
+
+```bash
+bun . --inp ./cyr-translation --out ./lat-translation
+```
