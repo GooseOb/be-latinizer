@@ -1,19 +1,12 @@
-import dict from "./dict";
+import { ALPHABET, Taraskevizer } from "taraskevizer";
+
+const latinizer = new Taraskevizer({ general: { abc: ALPHABET.LATIN_JI } });
 
 export const transformContent = (content: string) => {
-  const noFix: string[] = [];
-  return dict
-    .reduce(
-      (acc, [pattern, result]) =>
-        acc.replace(
-          pattern,
-          //@ts-ignore
-          result,
-        ),
-      content.replace(/(?<=<).*?(?=>)/g, ($0) => {
-        noFix.push($0);
-        return "\ufffa";
-      }),
+  return latinizer
+    .convertAlphabetOnly(
+      content.replace(/\\n/g, " \\n ").replace(/ і(?=зь? )/g, " i"),
     )
-    .replace(/(?<=<)\ufffa(?=>)/g, () => noFix.shift()!);
+    .replace(/ \\n /g, "\\n")
+    .replace(/ŭ/g, "ů");
 };
