@@ -3,6 +3,7 @@
 output.7z
 output/**/*
 input/**/*
+**/*.local.*
 
 # Logs
 

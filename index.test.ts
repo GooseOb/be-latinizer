@@ -17,6 +17,8 @@ const testOnCases = <TInput, TOutput extends string>(
   });
 };
 
+const localCasesFile = Bun.file("./cases.local.json");
+
 testOnCases("transform-content", transformContent, [
   ["пры інстытуце", "pry jinstytucie"],
   ["поіць", "pojić"],
@@ -53,4 +55,5 @@ testOnCases("transform-content", transformContent, [
   ["<lia>а</lia>", "<lia>a</lia>"],
   ["залежыць,\\nяк да", "zaležyć,\\njak da"],
   ["сюды,\\nё цікавыя", "siudy,\\njo cikavyja"],
+  ...((await localCasesFile.exists()) ? await localCasesFile.json() : []),
 ]);

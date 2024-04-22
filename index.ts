@@ -1,4 +1,4 @@
-import { exists, mkdir, readdir, stat } from "fs/promises";
+import { mkdir, readdir, stat } from "fs/promises";
 import * as path from "path";
 import { transformContent } from "./transform-content";
 import iconv from "iconv-lite";
@@ -8,17 +8,10 @@ const getArg = (name: string, defaultValue: string) => {
   return index ? process.argv[index] : defaultValue;
 };
 
-const sourceDir = getArg("--inp", "./input");
+const sourceDir = path.resolve(getArg("--inp", "./input"));
 const targetDir = getArg("--out", "./output");
 const sourceEncoding = getArg("--inpenc", "win1251");
 const targetEncoding = getArg("--outenc", "win1250");
-
-if (!(await exists(sourceDir))) {
-  process.stderr.write(
-    `\x1b[31m[be-latinizer]\x1b[0m Source directory \x1b[33m${sourceDir}\x1b[0m does not exist\n`,
-  );
-  process.exit(1);
-}
 
 for (const relFilePath of await readdir(sourceDir, { recursive: true })) {
   const sourcePath = path.join(sourceDir, relFilePath);
@@ -27,17 +20,21 @@ for (const relFilePath of await readdir(sourceDir, { recursive: true })) {
     continue;
   }
 
-  const data = iconv.decode(
-    Buffer.from(await Bun.file(sourcePath).arrayBuffer()),
-    sourceEncoding,
-  );
-
   const targetPath = path.join(targetDir, relFilePath);
-
-  await Bun.write(
-    targetPath,
-    iconv.encode(transformContent(data.toString()), targetEncoding),
-  );
-
-  process.stdout.write(`[done] ${targetPath}\n`);
+  Bun.file(sourcePath)
+    .arrayBuffer()
+    .then((buffer) =>
+      Bun.write(
+        targetPath,
+        iconv.encode(
+          transformContent(
+            iconv.decode(Buffer.from(buffer), sourceEncoding).toString(),
+          ),
+          targetEncoding,
+        ),
+      ),
+    )
+    .then(() => {
+      process.stdout.write(`[done] ${targetPath}\n`);
+    });
 }
