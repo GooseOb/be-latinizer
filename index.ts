@@ -14,6 +14,7 @@ const sourceEncoding = getArg("--inpenc", "win1251");
 const targetEncoding = getArg("--outenc", "win1250");
 
 for (const relFilePath of await readdir(sourceDir, { recursive: true })) {
+  if (relFilePath.endsWith("desktop.ini")) continue;
   const sourcePath = path.join(sourceDir, relFilePath);
   if ((await stat(sourcePath)).isDirectory()) {
     await mkdir(path.join(targetDir, relFilePath), { recursive: true });
