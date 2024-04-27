@@ -25,7 +25,7 @@ testOnCases("transform-content", transformContent, [
   ["вераб’і", "vierabji"],
   ["у ім", "u jim"],
   ["іста", "jista"],
-  ["Іншы ў ігрушы", "Jinšy ů jihrušy"],
+  ["Іншы ў ігрушы", "Jinšy ů ihrušy"],
   ["яна із мною", "jana iz mnoju"],
   ["побач ізь ім", "pobač iź jim"],
   ["церазь ямы", "cieraź jamy"],
