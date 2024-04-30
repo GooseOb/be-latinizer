@@ -7,6 +7,9 @@ export const transformContent = (content: string) => {
     .convertAlphabetOnly(
       content.replace(/\\n/g, " \\n ").replace(/ і(?=зь? )/g, " i"),
     )
-    .replace(/ \\n /g, "\\n")
+    .replace(/(?:^| )\\n(?: |$)/g, "\\n")
+    .replace(/(?<=[AOUEYIaoueyi]\s*\\n\s*)(?=i)/gu, "j")
+    .replace(/(?<=[AOUEYIaoueyi]\s*\\n\s*)I(?=\p{Ll})/gu, "Ji")
+    .replace(/(?<=[AOUEYIaoueyi]\s*\\n\s*)I(?=\p{Lu})/gu, "JI")
     .replace(/ŭ/g, "ů");
 };

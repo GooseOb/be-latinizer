@@ -4,6 +4,7 @@ output.7z
 output/**/*
 input/**/*
 **/*.local.*
+bun.lockb
 
 # Logs
 

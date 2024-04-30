@@ -55,5 +55,9 @@ testOnCases("transform-content", transformContent, [
   ["<lia>а</lia>", "<lia>a</lia>"],
   ["залежыць,\\nяк да", "zaležyć,\\njak da"],
   ["сюды,\\nё цікавыя", "siudy,\\njo cikavyja"],
+  ["пры \\nінстытуце", "pry \\njinstytucie"],
+  ["ПРЫ \\nІНСТЫТУЦЕ", "PRY \\nJINSTYTUCIE"],
+  ["пры \\nІнстытуце", "pry \\nJinstytucie"],
+  ["\\nІклы", "\\nJikły"],
   ...((await localCasesFile.exists()) ? await localCasesFile.json() : []),
 ]);
