@@ -1,12 +1,15 @@
-import { ALPHABET, Taraskevizer } from "taraskevizer";
+import { dicts, tarask, pipelines, TaraskConfig } from "taraskevizer";
 
-const latinizer = new Taraskevizer({ general: { abc: ALPHABET.LATIN_JI } });
+const cfg = new TaraskConfig({
+  general: { abc: dicts.alphabets.latinJi },
+});
 
 export const transformContent = (content: string) => {
-  return latinizer
-    .convertAlphabetOnly(
-      content.replace(/\\n/g, " \\n ").replace(/ і(?=зь? )/g, " i"),
-    )
+  return tarask(
+    content.replace(/\\n/g, " \\n ").replace(/ і(?=зь? )/g, " i"),
+    pipelines.plainText,
+    cfg,
+  )
     .replace(/(?:^| )\\n(?: |$)/g, "\\n")
     .replace(/(?<=[AOUEYIaoueyi]\s*\\n\s*)(?=i)/gu, "j")
     .replace(/(?<=[AOUEYIaoueyi]\s*\\n\s*)I(?=\p{Ll})/gu, "Ji")

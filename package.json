@@ -10,6 +10,6 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "taraskevizer": "^6.0.4"
+    "taraskevizer": "^8.0.6"
   }
 }
